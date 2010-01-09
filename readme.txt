@@ -4,7 +4,7 @@ Donate link: http://www.mmilan.com/
 Tags: useless, sidebar, random, widget, weird, knowledge, interesting, fun facts, fact, post, link, post, quotes
 Requires at least: 2.7
 Tested up to: 2.9.1
-Stable tag: 0.1
+Stable tag: 0.2
 
 Display useless facts or quotes from posts (with link) at the sidebar widget.
 
@@ -14,6 +14,9 @@ This plugin allows you to add a widget to sidebar with quotes from your publishe
 
 Changelog:
 
+	2010-01-08, version 0.2
+		Options page added.
+		
 	2010-01-08, version 0.1
 		First realase!
 
@@ -28,8 +31,6 @@ Changelog:
 = Are there any plans for new version? =
 
 Yes. Some new features I plan to add:
-	* add more useless facts
-	* options page
 	* easyer way to edit quotes / facts
 
 == Screenshots ==
