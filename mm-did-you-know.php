@@ -5,7 +5,7 @@
  *	Plugin Name: Did you know?
  *	Plugin URI: http://www.mmilan.com/did-you-know/
  *	Description: Adds a sidebar widget that display interesting quotes from posts with link to the post.
- *	Version: 0.1
+ *	Version: 0.2
  *	Author: Milan Milosevic
  *	Author URI: http://www.mmilan.com/
  *
@@ -233,6 +233,7 @@ add_action('admin_menu', 'mmdyk_add_menu');
  */
 
 function mmdyk_page() {
+	
 	// Page wrapper start
 	echo '<div class="wrap">';
 
@@ -240,11 +241,52 @@ function mmdyk_page() {
 	screen_icon();
 	echo '<h2>MM Did You Know?</h2>';
 
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'mmdyk_quote';
+	$hidden_field_name = 'mm_dyk_submit';
+	
+	// See if the user has posted us some information
+	// If they did, this hidden field will be set to 'Y'
+	if(isset($_POST[ $hidden_field_name ]) && $_POST[ $hidden_field_name ] == 'Y' ) {
+		$mydata = $_POST['mmdyk_txtarea'];
+		$wpdb->query("DELETE FROM $table_name WHERE post_id = 0");
+  
+	// Do something with $mydata 
+  
+		if($mmdyk_list = strip_tags(stripslashes($mydata))) {
+			$mmdyk_array = explode("\n", $mmdyk_list);
+			sort($mmdyk_array);
+
+			foreach($mmdyk_array as $mmdyk_current) {
+				$mmdyk_current = trim($mmdyk_current);
+				if(!empty($mmdyk_current)) {
+					$mmdyk_str = explode(" http://", $mmdyk_current);
+					if (strlen($mmdyk_str[1]) > 0) $mmdyk_str[1] = "http://".$mmdyk_str[1];
+					$wpdb->insert( $table_name, array( 'quotes' => $mmdyk_str[0], 'post_id' => $post_id, 'link' => $mmdyk_str[1] ));
+				}
+			}
+		}
+	}
+	
 	// Options
-	echo	'<div id="poststuff" class="ui-sortable">';
-	echo	'Come back after upgrading to version 0.2! In a few days :)'; 
-	echo	'</div>';
-}
+?>
+	<p>Only one quote per line (no HTML code). To add a link put it at the end of line and start it with http://</p>
+	<form name="mmdyk_form" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>">
+		<input type="hidden" name="<?php echo $hidden_field_name; ?>" value="Y">
+
+		<textarea name="mmdyk_txtarea" rows="30" cols="120" wrap="off" style="overflow: auto;">
+<?php 			$mmdyk_rec = $wpdb->get_results("SELECT * FROM $table_name  WHERE post_id = 0");
+			foreach($mmdyk_rec as $mmdyk_act) {
+				echo $mmdyk_act->quotes . " " . $mmdyk_act->link . "\r\n";
+			}
+?>
+		</textarea>
+	
+		<p class="submit">
+			<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+		</p>
+	</form>
+<?php }
 
 
 /*
