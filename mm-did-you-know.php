@@ -5,7 +5,7 @@
  *	Plugin Name: Did you know?
  *	Plugin URI: http://www.mmilan.com/did-you-know/
  *	Description: Adds a sidebar widget that display interesting quotes from posts with link to the post.
- *	Version: 0.2
+ *	Version: 0.2.1
  *	Author: Milan Milosevic
  *	Author URI: http://www.mmilan.com/
  *
@@ -302,7 +302,7 @@ function mmdyk_activate() {
 
 	// Create the table if it doesn't already exist
 	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-		$results = $wpdb->query("CREATE TABLE IF NOT EXISTS $table_name(id INT(11) NOT NULL AUTO_INCREMENT, quotes VARCHAR(2048) DEFAULT NULL, post_id INT(11) NOT NULL, link VARCHAR(255) DEFAULT NULL, PRIMARY KEY (id));");
+		$results = $wpdb->query("CREATE TABLE IF NOT EXISTS $table_name(id INT(11) NOT NULL AUTO_INCREMENT, quotes VARCHAR(2048) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, post_id INT(11) NOT NULL, link VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, PRIMARY KEY (id)) DEFAULT CHARSET=utf8;");
 		$wpdb->insert( $table_name, array( 'quotes' => 'MM Did You Know? Wordpress plugin by Milan Milosevic.', 'post_id' => 0, 'link' => 'http://www.mmilan.com/'));
 		$wpdb->insert( $table_name, array( 'quotes' => 'A rat can last longer without water than a camel.', 'post_id' => 0, 'link' => ''));
 		$wpdb->insert( $table_name, array( 'quotes' => 'A female ferret will die if it goes into heat and cannot find a mate.', 'post_id' => 0, 'link' => ''));
@@ -314,7 +314,12 @@ function mmdyk_activate() {
 		$wpdb->insert( $table_name, array( 'quotes' => 'The first CD pressed in the US was Bruce Springsteen`s "Born in the USA."', 'post_id' => 0, 'link' => ''));
 		$wpdb->insert( $table_name, array( 'quotes' => 'Charlie Chaplin once won third prize in a Charlie Chaplin look-alike contest.', 'post_id' => 0, 'link' => ''));
 		$wpdb->insert( $table_name, array( 'quotes' => 'The Guinness Book of Records holds the record for being the book most often stolen from public libraries.', 'post_id' => 0, 'link' => ''));
-	}	
+	} else {
+		$results = $wpdb->query("alter table $table_name' default collate utf8_unicode_ci;");
+		$results = $wpdb->query("ALTER TABLE $table_name CHANGE quotes quotes VARCHAR(2048) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;");
+		$results = $wpdb->query("ALTER TABLE $table_name CHANGE link link VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;");
+	}
+	
 }
 
 register_activation_hook(__FILE__, 'mmdyk_activate');
