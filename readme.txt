@@ -14,6 +14,9 @@ This plugin allows you to add a widget to sidebar with quotes from your publishe
 
 Changelog:
 
+	2010-01-11, version 0.2.1
+		Bugfix: Problem with Cyrillic letters solved
+	
 	2010-01-08, version 0.2
 		Options page added.
 		
