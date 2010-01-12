@@ -4,7 +4,7 @@ Donate link: http://www.mmilan.com/
 Tags: useless, sidebar, random, widget, weird, knowledge, interesting, fun facts, fact, post, link, post, quotes
 Requires at least: 2.7
 Tested up to: 2.9.1
-Stable tag: 0.2
+Stable tag: 0.2.1
 
 Display useless facts or quotes from posts (with link) at the sidebar widget.
 
