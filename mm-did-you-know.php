@@ -3,11 +3,11 @@
 /*
  *
  *	Plugin Name: Did you know?
- *	Plugin URI: http://www.mmilan.com/did-you-know/
+ *	Plugin URI: http://www.svetnauke.org/did-you-know/
  *	Description: Adds a sidebar widget that display interesting quotes from posts with link to the post.
- *	Version: 0.2.1
+ *	Version: 0.3.0
  *	Author: Milan Milosevic
- *	Author URI: http://www.mmilan.com/
+ *	Author URI: http://www.svetnauke.org/
  *
  *	Copyright (c) 2009 Milan Milosevic. All Rights Reserved.
  *
@@ -36,6 +36,19 @@
 /*
  *	mm-did-you-know Add Edit post Options
  */
+
+// Add custom CSS style for Widget
+function mm_dyk_css() {
+
+	echo '<style type="text/css">';
+	echo '.mmdyk_txt {';
+// To change a color of text uncomment next line and set a color 
+//	echo '	color: #FF00FF;';
+	echo '	padding-bottom: 1.2em; }';
+	echo '</style>';
+}
+
+add_action('wp_head', 'mm_dyk_css');
 
 
 /* Use the admin_menu action to define the custom boxes */
@@ -161,16 +174,18 @@ class WP_Widget_mmdyk extends WP_Widget {
 
 		// Get a fun fact
 		$mmdyk_no = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
-		$mmdyk_rnd = rand(1, $mmdyk_no) - 1;
-		$mmdyk_rec = $wpdb->get_results("SELECT * FROM $table_name LIMIT $mmdyk_rnd, 1");
-		foreach($mmdyk_rec as $mmdyk_act) {
-			$mmdyk_text = $mmdyk_act->quotes;
-			$mmdyk_post = $mmdyk_act->post_id;
-			$mmdyk_link = $mmdyk_act->link;
-		}
+		$mmdyk_num = $instance['mmdyk_num'];
 
-if ($mmdyk_post == 0) $mmdyk_more = $mmdyk_link;
-    else $mmdyk_more = get_permalink($mmdyk_post);
+		if ((!isset($mmdyk_num)) or ($mmdyk_num < 1)) $mmdyk_num = 1;
+		for ($i = 1; $i <= $mmdyk_num; $i++) {	
+			$mmdyk_rnd = rand(1, $mmdyk_no) - 1;
+			$mmdyk_rec = $wpdb->get_results("SELECT * FROM $table_name LIMIT $mmdyk_rnd, 1");
+			foreach($mmdyk_rec as $mmdyk_act) {
+				$mmdyk_text[$i] = $mmdyk_act->quotes;
+				$mmdyk_post[$i] = $mmdyk_act->post_id;
+				$mmdyk_link[$i] = $mmdyk_act->link;
+			}
+		}
 
 		extract($args);
 
@@ -180,11 +195,21 @@ if ($mmdyk_post == 0) $mmdyk_more = $mmdyk_link;
 		echo $before_widget;
 		echo $before_title . $option_title . $after_title;
 
-		echo '<div>' . $mmdyk_text;
-		if (strlen($mmdyk_more) > 0) echo '<a href="' . $mmdyk_more . '"> More...</a>';
-		echo '</div>';
+		if ($instance['mmdyk_blank'] == "on")
+			$mmdyk_blank = 'target="_blank"';
+		else $mmdyk_blank = '';
+
+		for ($i = 1; $i <= $mmdyk_num; $i++) {	
+			if ($mmdyk_post[$i] == 0) $mmdyk_more = $mmdyk_link[$i];
+				else $mmdyk_more = get_permalink($mmdyk_post[$i]);
+		
+			echo '<p class="mmdyk_txt">' . $mmdyk_text[$i];
+			if (strlen($mmdyk_more) > 0) echo '<a '.$mmdyk_blank.'href="' . $mmdyk_more . '"> More...</a>';
+			echo '</p>';
+		}	
+
 		if ($instance['mmdyk_credits'] != "on")
-			echo '<div style="text-align: right;"><font face="arial" size="-4">Plugin by <a href="http://www.mmilan.com/" title="Did You Know? - plugin for Wordpress">mmilan</a></font></div>';
+			echo '<p style="text-align: right;"><font face="arial" size="-4">Plugin by <a href="http://www.svetnauke.org/" title="Did You Know? - plugin for Wordpress">mmilan</a></font></p>';
 
 		echo $after_widget;
 	}
@@ -198,12 +223,19 @@ if ($mmdyk_post == 0) $mmdyk_more = $mmdyk_link;
 
 		$instance = wp_parse_args((array)$instance, array('title' => 'MM Did You Know?'));
 		$option_title = strip_tags($instance['title']);
+ 		$option_num = strip_tags($instance['mmdyk_num']);
 
 		echo '<p>';
 		echo 	'<label for="' . $this->get_field_id('title') . '">Title:</label>';
-		echo 	'<input class="widefat" type="text" value="' . $option_title . '" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" />';
+		echo 	'<input class="widefat" type="text" value="' . $option_title . '" id="' . $this->get_field_id('title') . '" name="' . $this->get_field_name('title') . '" /><br />';
+		echo 	'<label for="' . $this->get_field_id('mmdyk_num') . '">Number of facts do display:</label>';
+		echo 	'<input class="widefat" type="text" value="' . $option_num . '" id="' . $this->get_field_id('mmdyk_num') . '" name="' . $this->get_field_name('mmdyk_num') . '" />';
 		echo '</p>';
 ?>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( (bool)  $instance['mmdyk_blank'], true ); ?> id="<?php echo $this->get_field_id( 'mmdyk_blank' ); ?>" name="<?php echo $this->get_field_name( 'mmdyk_blank' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'mmdyk_blank' ); ?>">Open link in new window</label>
+		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( (bool)  $instance['mmdyk_credits'], true ); ?> id="<?php echo $this->get_field_id( 'mmdyk_credits' ); ?>" name="<?php echo $this->get_field_name( 'mmdyk_credits' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'mmdyk_credits' ); ?>">Don't show credits</label>
