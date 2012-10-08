@@ -1,3 +1,8 @@
+2011-05-20 ver 0.3.0, Milan Milosevic
+	New: display multiple facts in a widget
+	New: open link in new windows
+	Bugfix: CSS styling is easier now
+
 2010-01-11 ver 0.2.1, Milan Milosevic
 	Bugfix: Problem with Cyrillic letters solved
 
