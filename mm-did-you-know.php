@@ -5,7 +5,7 @@
  *	Plugin Name: Did you know?
  *	Plugin URI: http://www.svetnauke.org/did-you-know/
  *	Description: Adds a sidebar widget that display interesting quotes from posts with link to the post.
- *	Version: 0.3.1
+ *	Version: 0.3.2
  *	Author: Milan Milosevic
  *	Author URI: http://www.svetnauke.org/
  *
