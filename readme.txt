@@ -3,8 +3,8 @@ Contributors: mmilan81
 Donate link: http://www.svetnauke.org/
 Tags: useless, sidebar, random, widget, weird, knowledge, interesting, fun facts, fact, post, link, post, quotes
 Requires at least: 2.7
-Tested up to: 3.4.2
-Stable tag: 0.3.1
+Tested up to: 4.1.1
+Stable tag: 0.3.2
 
 Display useless facts or quotes from posts (with link) at the sidebar widget.
 
@@ -14,6 +14,9 @@ This plugin allows you to add a widget to sidebar with quotes from your publishe
 
 Changelog:
 
+	2015-03-13, version 0.3.2
+		Update for Wordpress 4.1.1
+	
 	2012-10-09, version 0.3.1
 		Bugfix & version compatibility
 
