@@ -5,11 +5,11 @@
  *	Plugin Name: Did you know?
  *	Plugin URI: http://www.svetnauke.org/did-you-know/
  *	Description: Adds a sidebar widget that display interesting quotes from posts with link to the post.
- *	Version: 0.3.2
+ *	Version: 0.3.5
  *	Author: Milan Milosevic
  *	Author URI: http://www.svetnauke.org/
  *
- *	Copyright (c) 2009 Milan Milosevic. All Rights Reserved.
+ *	Copyright (c) 2009-2015 Milan Milosevic. All Rights Reserved.
  *
  *	This program is free software; you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
@@ -31,10 +31,6 @@
  *	We kindly ask that you keep links to Joe's Web Tools so
  *	other people can find out about this plugin.
  *
- */
-
-/*
- *	mm-did-you-know Add Edit post Options
  */
 
 // Add custom CSS style for Widget
@@ -355,5 +351,46 @@ function mmdyk_activate() {
 }
 
 register_activation_hook(__FILE__, 'mmdyk_activate');
+
+
+function show_mmdyk ($mmdyk_num = 1, $mmdyk_blank = "on", $mdyk_credits = "on") {
+
+		global $wpdb;
+
+		// Create the table name
+		$table_name = $wpdb->prefix . 'mmdyk_quote';
+
+		// Get a fun fact
+		$mmdyk_no = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
+
+		if ((!isset($mmdyk_num)) or ($mmdyk_num < 1)) $mmdyk_num = 1;
+		for ($i = 1; $i <= $mmdyk_num; $i++) {	
+			$mmdyk_rnd = rand(1, $mmdyk_no) - 1;
+			$mmdyk_rec = $wpdb->get_results("SELECT * FROM $table_name LIMIT $mmdyk_rnd, 1");
+			foreach($mmdyk_rec as $mmdyk_act) {
+				$mmdyk_text[$i] = $mmdyk_act->quotes;
+				$mmdyk_post[$i] = $mmdyk_act->post_id;
+				$mmdyk_link[$i] = $mmdyk_act->link;
+			}
+		}
+
+		if ($mmdyk_blank == "on")
+			$mmdyk_blank = 'target="_blank"';
+		else $mmdyk_blank = '';
+
+		for ($i = 1; $i <= $mmdyk_num; $i++) {	
+			if ($mmdyk_post[$i] == 0) $mmdyk_more = $mmdyk_link[$i];
+				else $mmdyk_more = get_permalink($mmdyk_post[$i]);
+		
+			echo '<p class="mmdyk_txt">' . $mmdyk_text[$i];
+			if (strlen($mmdyk_more) > 0) echo '<a '.$mmdyk_blank.'href="' . $mmdyk_more . '"> More...</a>';
+			echo '</p>';
+		}	
+
+		if ($mdyk_credits != "off")
+			echo '<p style="text-align: right;"><font face="arial" size="-4">Plugin by <a href="http://www.svetnauke.org/" title="Did You Know? - plugin for Wordpress">mmilan</a></font></p>';
+
+
+}
 
 ?>
