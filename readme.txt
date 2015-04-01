@@ -4,7 +4,7 @@ Donate link: http://www.svetnauke.org/
 Tags: useless, sidebar, random, widget, weird, knowledge, interesting, fun facts, fact, post, link, post, quotes
 Requires at least: 2.7
 Tested up to: 4.1.1
-Stable tag: 0.3.2
+Stable tag: 0.3.5
 
 Display useless facts or quotes from posts (with link) at the sidebar widget.
 
@@ -12,8 +12,20 @@ Display useless facts or quotes from posts (with link) at the sidebar widget.
 
 This plugin allows you to add a widget to sidebar with quotes from your published posts. The quotes will be shown with link to the rest of the post. Also, it allows you to add some useless knowledge facts.
 
+If you want to place quotes somewhere in the theme file you can use the function
+
+<?php show_mmdyk (_num, _blank, _credits) ?>
+
+The parametar are:
+	_num - number of displayed qutes (default: 1)
+	_blank - on|off, open the link in a new window (default: 'on')
+	_credits - on|off, display autho's credits (default: 'on')
+
 Changelog:
 
+	2015-04-02, version 0.3.5
+		New: add the quotes anywhere you want in the theme; function show_mmdyk ();
+	
 	2015-03-13, version 0.3.2
 		Update for Wordpress 4.1.1
 	
